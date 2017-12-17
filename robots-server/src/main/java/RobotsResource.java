@@ -1,4 +1,3 @@
-import com.google.gson.Gson;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
@@ -30,13 +29,11 @@ public class RobotsResource {
 
     private final DbService dbService;
     private final ObjectMapper mapper;
-    private final Gson gson;
 
     public RobotsResource(
             final DbService dbService, final ObjectMapper mapper) {
         this.dbService = dbService;
         this.mapper = mapper;
-        this.gson = new Gson();
     }
 
     @POST
@@ -181,7 +178,7 @@ public class RobotsResource {
             return formatJsonResponse(500, "Internal Server error");
         }
         return Response
-                .ok(gson.toJson(robotParts), MediaType.APPLICATION_JSON_TYPE)
+                .ok(robotParts, MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }
 

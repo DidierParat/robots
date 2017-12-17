@@ -1,6 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
-import java.util.List;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -48,11 +47,7 @@ public class RobotsClient {
                         weight,
                         compatibilities);
         final Response response
-                = client.target(robotsServerUri)
-                        .path(PATH_ADD)
-                        .request(MediaType.APPLICATION_JSON_TYPE)
-                        .post(Entity.entity(
-                                robotPart, MediaType.APPLICATION_JSON_TYPE));
+                = sendPostRequest(PATH_ADD, robotPart);
         checkHttpResponse(response);
     }
 
@@ -61,11 +56,7 @@ public class RobotsClient {
         final ReadRequest readRequest
                 = new ReadRequest(serialNumber);
         final Response response
-                = client.target(robotsServerUri)
-                .path(PATH_READ)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(
-                        readRequest, MediaType.APPLICATION_JSON_TYPE));
+                = sendPostRequest(PATH_READ, readRequest);
         checkHttpResponse(response);
         try {
             return response.readEntity(RobotPart.class);
@@ -121,22 +112,14 @@ public class RobotsClient {
                         fieldName,
                         value);
         final Response response
-                = client.target(robotsServerUri)
-                .path(PATH_UPDATE)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(
-                        updateRequest, MediaType.APPLICATION_JSON_TYPE));
+                = sendPostRequest(PATH_UPDATE, updateRequest);
         checkHttpResponse(response);
     }
 
     public void delete(final String serialNumber) throws RobotsClientException {
         final DeleteRequest deleteRequest = new DeleteRequest(serialNumber);
         final Response response
-                = client.target(robotsServerUri)
-                .path(PATH_DELETE)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(
-                        deleteRequest, MediaType.APPLICATION_JSON_TYPE));
+                = sendPostRequest(PATH_DELETE, deleteRequest);
         checkHttpResponse(response);
     }
 
@@ -163,12 +146,7 @@ public class RobotsClient {
         final ListCompatibleRequest listCompatibleRequest
                 = new ListCompatibleRequest(serialNumber, number);
         final Response response
-                = client.target(robotsServerUri)
-                .path(PATH_LIST_COMPATIBLE)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(
-                        listCompatibleRequest,
-                        MediaType.APPLICATION_JSON_TYPE));
+                = sendPostRequest(PATH_LIST_COMPATIBLE, listCompatibleRequest);
         checkHttpResponse(response);
         try {
             return response.readEntity(RobotPart[].class);
@@ -178,6 +156,15 @@ public class RobotsClient {
                             + " \"listCompatible\" request.",
                     e);
         }
+    }
+
+    private Response sendPostRequest(
+            final String path, final Object requestEntity) {
+        return client.target(robotsServerUri)
+                .path(path)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(
+                        requestEntity, MediaType.APPLICATION_JSON_TYPE));
     }
 
     private void checkHttpResponse(
