@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,8 @@ public class Main {
             LOGGER.log(Level.SEVERE, "Could not connect to DB.", e);
             return;
         }
-        final RobotsResource robotsResource = new RobotsResource(dbService);
+        final RobotsResource robotsResource
+                = new RobotsResource(dbService, new ObjectMapper());
         final ResourceConfig resourceConfig = new ResourceConfig();
         resourceConfig.register(robotsResource);
         final ServletHolder servlet

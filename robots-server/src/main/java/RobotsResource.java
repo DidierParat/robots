@@ -32,9 +32,10 @@ public class RobotsResource {
     private final ObjectMapper mapper;
     private final Gson gson;
 
-    public RobotsResource(final DbService dbService) {
+    public RobotsResource(
+            final DbService dbService, final ObjectMapper mapper) {
         this.dbService = dbService;
-        this.mapper = new ObjectMapper();
+        this.mapper = mapper;
         this.gson = new Gson();
     }
 
