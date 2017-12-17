@@ -8,20 +8,43 @@ import models.Constants;
 import models.RobotPart;
 
 public class DbService {
-    private static final String PARTS_TABLE_NAME = "parts";
-    private static final String NAME_COLUMN_NAME = "name";
-    private static final String SERIAL_NUMBER_COLUMN_NAME = "serial_number";
-    private static final String MANUFACTURER_COLUMN_NAME = "manufacturer";
-    private static final String WEIGHT_COLUMN_NAME = "weight";
-    private static final String COMPATIBILITIES_COLUMN_NAME = "compatibilities";
-    private static final String COMPATIBILITIES_SEPARATOR = ":";
+    // protected for unit tests
+    protected static final String PARTS_TABLE_NAME = "parts";
+    protected static final String NAME_COLUMN_NAME = "name";
+    protected static final String SERIAL_NUMBER_COLUMN_NAME = "serial_number";
+    protected static final String MANUFACTURER_COLUMN_NAME = "manufacturer";
+    protected static final String WEIGHT_COLUMN_NAME = "weight";
+    protected static final String COMPATIBILITIES_COLUMN_NAME = "compatibilities";
+    protected static final String COMPATIBILITIES_SEPARATOR = ":";
 
     private final Connection connection;
-    public DbService() throws SQLException {
-        connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/robots?useSSL=false",
-                "root",
-                "root");
+
+    public DbService(
+            final String dbUrl,
+            final String username,
+            final String password)
+            throws SQLException {
+        connection = DriverManager.getConnection(dbUrl, username, password);
+        init();
+    }
+
+    public DbService(final String dbUrl) throws SQLException {
+        connection = DriverManager.getConnection(dbUrl);
+        init();
+    }
+
+    private void init() throws SQLException {
+        final Statement statement = connection.createStatement();
+        statement.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS "
+                +  PARTS_TABLE_NAME
+                + " ( name varchar(50),"
+                + " serial_number varchar(50),"
+                + " manufacturer varchar(50),"
+                + " weight int,"
+                + " compatibilities text,"
+                + " primary key (serial_number));");
+        statement.close();
     }
 
     public void add(final RobotPart robotPart)
@@ -242,9 +265,13 @@ public class DbService {
 
     private String formatCompatibilities(final String[] compatibilities) {
         final StringBuffer formatedCompatibilities = new StringBuffer();
+        boolean firstValue = true;
         for (final String serialNumber : compatibilities) {
+            if (!firstValue) {
+                formatedCompatibilities.append(COMPATIBILITIES_SEPARATOR);
+            }
             formatedCompatibilities.append(serialNumber);
-            formatedCompatibilities.append(COMPATIBILITIES_SEPARATOR);
+            firstValue = false;
         }
         return formatedCompatibilities.toString();
     }

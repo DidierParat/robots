@@ -14,7 +14,10 @@ public class Main {
     public static void main(final String[] args) {
         final DbService dbService;
         try {
-            dbService = new DbService();
+            dbService = new DbService(
+                    "jdbc:mysql://localhost:3306/robots?useSSL=false",
+                    "root",
+                    "root");
         } catch (final SQLException e) {
             LOGGER.log(Level.SEVERE, "Could not connect to DB.", e);
             return;

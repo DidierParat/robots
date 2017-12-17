@@ -1,5 +1,6 @@
 A simple web server and its client.
 
 To run local tests:
-    1. Run the server (Main.java in robots-server).
-    2. Run LocalTest.java in robots-client.
+    1. Run mysql on localhost:3306, create a DB called "robots"
+    2. Run the server (Main.java in robots-server).
+    3. Run LocalTest.java in robots-client.
