@@ -133,6 +133,10 @@ public class RobotsResource {
             return formatJsonResponse(
                     400,
                     "Bad request. New serial number already exists.");
+        } catch (DbService.IllegalArgumentException e) {
+            return formatJsonResponse(
+                    400,
+                    "Bad request. Unrecognized field.");
         }
         return formatJsonResponse(200, "OK");
     }

@@ -90,7 +90,8 @@ public class DbService {
             final Object valueOfField)
             throws DbServiceException,
             RessourceNotFoundException,
-            UpdateDbException {
+            UpdateDbException,
+            IllegalArgumentException {
         if (!robotPartExists(originalSerialNumber)) {
             throw new RessourceNotFoundException(
                     "Could not update robot parts. "
@@ -116,6 +117,8 @@ public class DbService {
                         + "The new serial number already exists in the DB.");
             }
             stringBuffer.append(SERIAL_NUMBER_COLUMN_NAME + "=?");
+        } else {
+            throw new IllegalArgumentException("Unrecognized field");
         }
         stringBuffer.append(" WHERE " + SERIAL_NUMBER_COLUMN_NAME + "=?;");
         final String updateString = stringBuffer.toString();
@@ -322,6 +325,13 @@ public class DbService {
 
     public class RessourceAlreadyExistsException extends Exception {
         public RessourceAlreadyExistsException(
+                final String message) {
+            super(message);
+        }
+    }
+
+    public class IllegalArgumentException extends Exception {
+        public IllegalArgumentException(
                 final String message) {
             super(message);
         }
