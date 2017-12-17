@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.didierparat.robots</groupId>
+    <artifactId>robots-bundle</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>robots-server</module>
+        <module>robots-client</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <compileSource>1.8</compileSource>
+        <compileTarget>1.8</compileTarget>
+        <jersey.version>2.25</jersey.version>
+        <javax.version>2.0.1</javax.version>
+        <jetty.version>9.3.6.v20151106</jetty.version>
+        <jackson-core.version>2.8.8</jackson-core.version>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>${compileSource}</source>
+                    <target>${compileTarget}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

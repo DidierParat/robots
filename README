@@ -1,0 +1,22 @@
+robot part:
+    name
+    serial number
+    manufacturer
+    weight
+    list of othercomponents it is compatible with
+
+endpoints:
+    add
+    read
+    update
+    delete
+    list all parts
+    list X unique robot parts that are compatible
+
+1. Give a simple sketch of the solution
+2. Outline database model
+3. Implement the web service
+4. Implement the Client
+5. Identify possible scalability and high availability problems in your solution and explain how you
+   would detect and mitigate them
+6. How would you secure access to it, deploy it etc?
