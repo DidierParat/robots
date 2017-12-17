@@ -51,4 +51,29 @@ public class RobotPart {
         this.weight = weight;
         this.compatibilities = compatibilities;
     }
+
+    // For unit tests
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof RobotPart)) {
+            return false;
+        }
+        final RobotPart otherRobotPart = (RobotPart) object;
+        if (this.getCompatibilities().length
+                != otherRobotPart.getCompatibilities().length) {
+            return false;
+        }
+        for (int count = 0; count < this.getCompatibilities().length; count++) {
+            if (!otherRobotPart.getCompatibilities()[count]
+                    .equals(otherRobotPart.getCompatibilities()[count])) {
+                return false;
+            }
+        }
+        return this.getName().equals(otherRobotPart.getName())
+                && this.getSerialNumber()
+                        .equals(otherRobotPart.getSerialNumber())
+                && this.getManufacturer()
+                        .equals(otherRobotPart.getManufacturer())
+                && this.getWeight().equals(otherRobotPart.getWeight());
+    }
 }
