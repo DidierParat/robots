@@ -24,6 +24,9 @@ hs_err_pid*
 #intellij
 .idea/
 robots-bundle.iml
+robots-client/robots-client.iml
+robots-server/robots-server.iml
+
 
 #target
 robots-client/target/
