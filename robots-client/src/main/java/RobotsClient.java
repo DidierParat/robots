@@ -31,7 +31,16 @@ public class RobotsClient {
         this.mapper = new ObjectMapper();
     }
 
-    // TODO(didier) javadoc
+    /**
+     * Add a new robot part to the database
+     * @param name Name of the robot part
+     * @param serialNumber Serial Number of the robot part
+     * @param manufacturer Manufacturer of the robot part
+     * @param weight Weight of the robot part
+     * @param compatibilities Array of Strings, each of them being
+     *                       a serial number of a compatible robot part
+     * @throws RobotsClientException If the robot part has not been added
+     */
     public void add(
             final String name,
             final String serialNumber,
@@ -51,6 +60,13 @@ public class RobotsClient {
         checkHttpResponse(response);
     }
 
+    /**
+     * Retrieve the RobotPart corresponding to the serial number
+     * @param serialNumber Serial number of the robot part
+     * @return RobotPart corresponding to the serial number
+     * @throws RobotsClientException If the robot part was not found
+     * or could not be read
+     */
     public RobotPart read(
             final String serialNumber) throws RobotsClientException {
         final ReadRequest readRequest
@@ -66,56 +82,77 @@ public class RobotsClient {
         }
     }
 
+    /**
+     * Update the name of the robot part
+     * @param serialNumber Serial number of the robot part
+     * @param name Updated name of the robot part
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void updateName(
-            final String oldSerialNumber,
-            final String value)
+            final String serialNumber,
+            final String name)
             throws RobotsClientException {
-        update(oldSerialNumber, Constants.NAME, value);
+        update(serialNumber, Constants.NAME, name);
     }
 
+    /**
+     * Update the serial number of the robot part
+     * @param formerSerialNumber Former serial number of the robot part
+     * @param updatedSerialNumber Updated serial number of the robot part
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void updateSerialNumber(
-            final String oldSerialNumber,
-            final String value)
+            final String formerSerialNumber,
+            final String updatedSerialNumber)
             throws RobotsClientException {
-        update(oldSerialNumber, Constants.SERIAL_NUMBER, value);
+        update(formerSerialNumber, Constants.SERIAL_NUMBER, updatedSerialNumber);
     }
 
+    /**
+     * Update the manufacturer of the robot part
+     * @param serialNumber Former serial number of the robot part
+     * @param manufacturer Updated serial number of the robot part
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void updateManufacturer(
-            final String oldSerialNumber,
-            final String value)
+            final String serialNumber,
+            final String manufacturer)
             throws RobotsClientException {
-        update(oldSerialNumber, Constants.MANUFACTURER, value);
+        update(serialNumber, Constants.MANUFACTURER, manufacturer);
     }
 
+    /**
+     * Update the weight of the robot part
+     * @param serialNumber Serial number of the robot part
+     * @param weight Weight of the robot part
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void updateWeight(
-            final String oldSerialNumber,
-            final Integer value)
+            final String serialNumber,
+            final Integer weight)
             throws RobotsClientException {
-        update(oldSerialNumber, Constants.WEIGHT, value);
+        update(serialNumber, Constants.WEIGHT, weight);
     }
 
+    /**
+     * Update the compatibilities of the robot part
+     * @param serialNumber Serial number of the robot part
+     * @param compatibilities Array of Strings, each of them being
+     *                        a serial number of a compatible robot part
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void updateCompatibilities(
-            final String oldSerialNumber,
-            final String[] value)
+            final String serialNumber,
+            final String[] compatibilities)
             throws RobotsClientException {
-        update(oldSerialNumber, Constants.COMPATIBILITIES, value);
+        update(serialNumber, Constants.COMPATIBILITIES, compatibilities);
     }
 
-    private void update(
-            final String oldSerialNumber,
-            final String fieldName,
-            final Object value)
-            throws RobotsClientException {
-        final UpdateRequest updateRequest
-                = new UpdateRequest(
-                        oldSerialNumber,
-                        fieldName,
-                        value);
-        final Response response
-                = sendPostRequest(PATH_UPDATE, updateRequest);
-        checkHttpResponse(response);
-    }
-
+    /**
+     * Delete the robot part
+     * @param serialNumber Serial number of the robot part to delete
+     * @throws RobotsClientException If the robot part did not get updated
+     */
     public void delete(final String serialNumber) throws RobotsClientException {
         final DeleteRequest deleteRequest = new DeleteRequest(serialNumber);
         final Response response
@@ -123,6 +160,11 @@ public class RobotsClient {
         checkHttpResponse(response);
     }
 
+    /**
+     * List all the robot parts in the DB
+     * @return An array of all RobotPart in the DB
+     * @throws RobotsClientException If the list could not be retrieved
+     */
     public RobotPart[] listAll() throws RobotsClientException {
         final Response response
                 = client.target(robotsServerUri)
@@ -139,6 +181,14 @@ public class RobotsClient {
         }
     }
 
+    /**
+     * List all robot parts compatible with the robot part
+     * corresponding to the given serial number
+     * @param serialNumber Serial number of the robot part
+     * @param number Max number of results
+     * @return
+     * @throws RobotsClientException
+     */
     public RobotPart[] listCompatible(
             final String serialNumber,
             final Integer number)
@@ -156,6 +206,21 @@ public class RobotsClient {
                             + " \"listCompatible\" request.",
                     e);
         }
+    }
+
+    private void update(
+            final String oldSerialNumber,
+            final String fieldName,
+            final Object value)
+            throws RobotsClientException {
+        final UpdateRequest updateRequest
+                = new UpdateRequest(
+                oldSerialNumber,
+                fieldName,
+                value);
+        final Response response
+                = sendPostRequest(PATH_UPDATE, updateRequest);
+        checkHttpResponse(response);
     }
 
     private Response sendPostRequest(
